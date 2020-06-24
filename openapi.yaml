@@ -1,0 +1,223 @@
+openapi: 3.0.0
+
+info:
+  title: "Delilah Restó"
+  
+  description: "This is the API made for Delilah Restó"
+  
+  version: "1.0.0"
+  
+servers: 
+  - url: http://delilahresto.com/v1
+
+
+tags:
+- name: "Users"
+  description: ""
+- name: "Products"
+  description: ""
+- name: "Pedidos" #Orders
+  description: ""
+
+
+paths:
+  /users/register:
+    post:
+      tags:
+      - Users
+      summary: Add a new user
+      description: ""
+      operationId: addUser
+      
+      requestBody:
+       required: true
+       content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+            
+      responses:
+        "201": 
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "405":
+          description: Invalid input
+
+
+  /users/login:
+    get:
+      tags:
+      - "Users"
+      summary: Log in an existing user
+      description: Login user and get the token
+      operationId: loginUser
+      
+      parameters:
+        - name: userData
+          in: path
+          required: true
+          description: username and password to login
+          content:
+            application/json:
+              schema:
+                type: object   
+                properties: 
+                  userName:
+                   type: string
+                   example: JorgePitusa
+                  password:
+                   type: string
+                   example: jorgito1234
+                  
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "46465as4654d6a4s54d6a"
+        "405":
+          description: "Validation exception"
+          
+  /products:
+    get:
+      tags: 
+      - "Products"
+      summary: List products
+      description: List all available products
+      
+      parameters:
+        - name: token
+          in: header
+          required: true
+          description: user token
+          
+            
+          example: "348992ghhuj288374"
+          
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                
+                
+    post:
+      tags: 
+      - "Products"
+      summary: Admin exclusive
+      description: Create a new product
+      
+      
+      responses:
+        "200":
+          description: OK
+      
+    put:
+      tags: 
+      - "Products"
+      summary: Admin exclusive
+      description: Edit an existing product
+      
+      responses:
+        "200":
+          description: OK
+      
+    delete:
+      tags: 
+      - "Products"
+      summary: Admin exclusive
+      description: Delete an existing product
+      
+      responses:
+        "204":
+          description: OK
+      
+      
+components:
+  schemas:
+    
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        userName:
+          type: "string"
+          example: Jorge365
+        fullName:
+          type: "string"
+          example: Jorge Pitusa
+        email:
+          type: "string"
+          example: jorgitopitusero@gmail.com
+        phoneNumber:
+          type: "string"
+          example: 3465226569
+        adress:
+          type: "string"
+          example: Lugarcito 3558
+        password:
+          type: "string"
+          example: jorge456789
+    Product:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        Descripción:
+          type: "string"
+          example: Hamburguesa con papas fritas light
+        
+        Price per unit:
+          type: "number"
+          example: 300
+    Order:
+      type: object
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 5
+        userId:
+          type: "integer"
+          format: "int64"
+          example: 43
+        paymentMethod:
+          type: "string"
+          enum: ['efectivo', 'debito', 'credito']
+          example: efectivo
+        price:
+          type: number
+          example: 15.50
+        state:
+          type: "string"
+          enum: ["entregado", "enviando", "preparando", "confirmado", "nuevo"]
+          example: entregado
+        products:
+          type: "array"
+          items:
+            type: object
+            properties:
+              productId:
+                type: "integer"
+                example: 3
+              productCuantity:
+                type: "integer"
+                example: 2
+    
