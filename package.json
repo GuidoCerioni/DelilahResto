@@ -4,7 +4,8 @@
   "description": "[View documentation](https://app.swaggerhub.com/apis-docs/GuidoCerioni/Resto/1.0.0)",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
     "express": "^4.17.1",
     "mysql2": "^2.1.0",
     "sequelize": "^6.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
