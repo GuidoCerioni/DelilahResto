@@ -1,10 +1,8 @@
 //  USERS ROUTES
 const express = require("express");
-
 const router = express.Router();
 
-var dataBase = require("../DB/initialization.js");
-const { QueryTypes } = require("../DB/initialization.js");
+var dataBase = require("../db/config.js");
 
 const cachtSqlError = (res, err) => {
   res.status(500).json({
@@ -17,7 +15,7 @@ const cachtSqlError = (res, err) => {
 router.get("/user", (req, res) => {
   dataBase
     .query(`SELECT * FROM users`, {
-      type: QueryTypes.SELECT,
+      type: dataBase.QueryTypes.SELECT,
     })
 
     .then((response) => res.status(200).json(response))
@@ -30,7 +28,7 @@ router.get("/user/:id", (req, res) => {
   dataBase
     .query("SELECT * FROM users WHERE id = :userid", {
       replacements: { userid: req.params.id },
-      type: QueryTypes.SELECT,
+      type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => res.status(200).json(response))
     .catch((err) => cachtSqlError(res, err));
@@ -38,17 +36,19 @@ router.get("/user/:id", (req, res) => {
 
 //POST new user
 router.post("/user/register", (req, res) => {
+  console.log(dataBase);
   //Check if the user already exist
   dataBase
     .query(`SELECT * FROM users WHERE email = :email`, {
       replacements: { email: req.body.email },
-      type: QueryTypes.SELECT,
+      type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => {
-      if (response) {
-        res.status(401).json({
+      if (response.length) {
+        res.status(409).json({
+          success: false,
           error: "Email is already used",
-          user: req.body,
+          rejectedUser: req.body,
         });
       } else {
         dataBase
@@ -62,6 +62,7 @@ router.post("/user/register", (req, res) => {
           )
           .then((response) => {
             res.status(201).json({
+              success: true,
               ...req.body,
               id: response[0],
             });

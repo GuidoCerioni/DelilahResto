@@ -1,33 +1,22 @@
-const express = require("express");
+/* SERVER */
 const bodyParser = require("body-parser");
-
+const express = require("express");
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-var dataBase = require("./DB/initialization");
+
 
 /** Middlewares generales */
 app.use(bodyParser.json());
 
-/** Endpoints middlewares & helpers */
-
-const validarIdCancion = (req, res, next) => {
-  const idCancion = parseInt(req.params.idCancion);
-  if (!isNaN(idCancion)) {
-    req.locals = {
-      ...req.locals,
-      idCancion,
-    };
-    next();
-  } else {
-    res.status(400).json({
-      mensaje: "El id debe ser un numero.",
-    });
-  }
-};
-
 // ROUTES
-app.use(require("./routes/users.js"));
+app.use(require("./src/routes/users.js"));
 
-app.listen(3000, () => {
-  console.log("Express server working");
+//Any requested path that do not exist will be a 404
+app.all("*", (req, res) => {
+  res.status(404).json({ error: "Incorrect path" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
