@@ -1,20 +1,14 @@
-const bodyParser = require("body-parser");
+
 const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 3000;
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("mysql://root:@127.0.0.1:3306/delilahresto");
-sequelize
-  .authenticate()
-  .then(() =>console.log("DB -Connection has been established successfully."))
-  .catch((error) => console.error("Unable to connect to the database:", error));
-/** Middlewares generales */
-app.use(bodyParser.json());
+const router = express.Router();
+
+var dataBase = require("../db/config.js");
 
 const jwt= require("jsonwebtoken");
 /** JWT LOGIN */
 const secret="sarasa";
-app.post("/login",(req,res)=>{
+
+router.post("/login",(req,res)=>{
     sequelize
     .query(`SELECT * FROM users WHERE userName = :userName AND password = :password`, {
         replacements: { 
@@ -45,7 +39,5 @@ function checkAdmin(req,res,next){
     
 }
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-  });
+module.exports = router;
   
