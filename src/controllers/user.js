@@ -43,7 +43,7 @@ router.post("/register", (req, res) => {
       type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => {
-      if (response.length) { 8
+      if (response.length) {
         res.status(409).json({
           success: false,
           error: "Email is already used",
