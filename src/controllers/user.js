@@ -4,12 +4,53 @@ const router = express.Router();
 
 var dataBase = require("../db/config.js");
 
+/* JWT LOGIN */
+const jwt = require("jsonwebtoken");
+const secret = "sarasa";
+
+/* General  error*/
 const cachtSqlError = (res, err) => {
   res.status(500).json({
-    mensaje: "Ocurrió un error en la consulta SQL.",
+    mensaje: "SQL query error",
     errStack: err,
   });
 };
+
+//LOGIN user
+router.post("/login", (req, res) => {
+  dataBase
+    .query(
+      `SELECT * FROM users WHERE userName = :userName AND password = :password`,
+      {
+        replacements: {
+          userName: req.body.userName,
+          password: req.body.password,
+        },
+        type: dataBase.QueryTypes.SELECT,
+      }
+    )
+    .then((response) => {
+      /* if there isnt a Response, return error. if there is, return the JWT-token */
+      if (response == 0) {
+        res.status(401).json({ error: "incorrect user-password" });
+      } else {
+        const payload = {
+          id: response[0].id,
+          isAdmin: response[0].isAdmin,
+        };
+        const options = {
+          expiresIn: 60000,
+        };
+
+        const token = jwt.sign(payload, secret, options);
+        
+        res.status(200).send({
+          userName: response[0].userName,
+          token: token,
+        });
+      }
+    });
+});
 
 // GET all users
 router.get("", (req, res) => {
@@ -70,7 +111,5 @@ router.post("/register", (req, res) => {
       }
     });
 });
-
-
 
 module.exports = router;
