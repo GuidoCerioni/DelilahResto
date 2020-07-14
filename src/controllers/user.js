@@ -4,6 +4,8 @@ const router = express.Router();
 
 var dataBase = require("../db/config.js");
 
+var jwtdecoder = require("../auth/jwt.js")
+
 /* JWT LOGIN */
 const jwt = require("jsonwebtoken");
 const secret = "sarasa";
@@ -53,7 +55,7 @@ router.post("/login", (req, res) => {
 });
 
 // GET all users
-router.get("", (req, res) => {
+router.get("", jwtdecoder.adminRoute, (req, res) => {
   dataBase
     .query(`SELECT * FROM users`, {
       type: dataBase.QueryTypes.SELECT,
