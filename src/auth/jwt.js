@@ -32,4 +32,21 @@ module.exports = {
       });
     }
   },
+  generateToken: function (req, res, response) {
+    const payload = {
+      id: response[0].id,
+      isAdmin: response[0].isAdmin,
+    };
+    const options = {
+      expiresIn: 60000,
+    };
+
+    const token = jwt.sign(payload, secret, options);
+
+    res.status(200).send({
+      success: true,
+      userName: response[0].userName,
+      accesstoken: token,
+    });
+  },
 };

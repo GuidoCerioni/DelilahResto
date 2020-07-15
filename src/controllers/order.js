@@ -15,8 +15,13 @@ const catchSqlError = (res, err) => {
     errStack: err.original,
   });
 };
-/* Create new product */
-router.post("/create", adminRoute, (req, res) => {
+
+/* Create new order */
+router.post("/create", userRoute, (req, res) => {
+  
+
+
+
   dataBase
     .query(`SELECT * FROM products WHERE name=:name`, {
       replacements: {
