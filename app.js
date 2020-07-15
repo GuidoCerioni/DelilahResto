@@ -3,31 +3,35 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
+var cors = require("cors");
 
 const path = require("path");
 
+var jwtdecoder = require("./src/auth/jwt.js");
+
 /** Middlewares generales */
 app.use(bodyParser.json());
+/* cors */
+app.use(cors());
 
 // ROUTES:
 // _users
-app.use("/user", 
-  require(path.join(__dirname, "src/controllers/user.js"))//controller
+
+app.use("/user", require(path.join(__dirname, "src/controllers/user.js")));
+
+app.use(
+  "/product",
+  require(path.join(__dirname, "src/controllers/product.js")) //controller
 );
 
-/**_products @TODO 
-app.use("/product",
-  require(path.join(__dirname, "src/controllers/product.js"))//controller
-);*/
-
-/**_orders @TODO 
-app.use("/order",
-  require(path.join(__dirname, "src/controllers/order.js"))//controller
-);*/
+app.use(
+  "/order",
+  require(path.join(__dirname, "src/controllers/order.js")) //controller
+);
 
 //Any requested path that do not exist will be a 404
 app.all("*", (req, res) => {
-  res.status(404).json({ error: "Incorrect path" });
+  res.status(404).json({ error: "Incorrect method/path" });
 });
 
 app.listen(PORT, () => {

@@ -1,11 +1,12 @@
 {
-  "name": "DelilahResto",
+  "name": "delilahresto",
   "version": "1.0.0",
   "description": "[View documentation](https://app.swaggerhub.com/apis-docs/GuidoCerioni/Resto/1.0.0)",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "debug": "nodemon --inspect app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/GuidoCerioni/DelilahResto#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",

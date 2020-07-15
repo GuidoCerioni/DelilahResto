@@ -2,19 +2,22 @@
 const express = require("express");
 const router = express.Router();
 
-var dataBase = require("../db/config.js");
+const dataBase = require("../db/config.js");
 
-var jwtdecoder = require("../auth/jwt.js")
+const { adminRoute } = require("../auth/jwt.js");
 
-/* JWT LOGIN */
+/* JWT */
 const jwt = require("jsonwebtoken");
-const secret = "sarasa";
+const { secret } = require("../auth/s3cr3t.js");
 
 /* General  error*/
-const cachtSqlError = (res, err) => {
+const catchSqlError = (res, err) => {
+  console.log(err);
   res.status(500).json({
-    mensaje: "SQL query error",
-    errStack: err,
+    success: false,
+    mensaje: "SQL error",
+
+    errStack: err.original,
   });
 };
 
@@ -32,9 +35,11 @@ router.post("/login", (req, res) => {
       }
     )
     .then((response) => {
-      /* if there isnt a Response, return error. if there is, return the JWT-token */
-      if (response == 0) {
-        res.status(401).json({ error: "incorrect user-password" });
+      if (response.length == 0) {
+        res.status(200).json({
+          success: false,
+          error: "incorrect user-password",
+        });
       } else {
         const payload = {
           id: response[0].id,
@@ -45,36 +50,38 @@ router.post("/login", (req, res) => {
         };
 
         const token = jwt.sign(payload, secret, options);
-        
+
         res.status(200).send({
+          success: true,
           userName: response[0].userName,
-          token: token,
+          accesstoken: token,
         });
       }
+    })
+    .catch((err) => {
+      catchSqlError(res, err);
     });
 });
 
 // GET all users
-router.get("", jwtdecoder.adminRoute, (req, res) => {
+router.get("", adminRoute, (req, res) => {
   dataBase
     .query(`SELECT * FROM users`, {
       type: dataBase.QueryTypes.SELECT,
     })
-
     .then((response) => res.status(200).json(response))
-
-    .catch((err) => cachtSqlError(res, err));
+    .catch((err) => catchSqlError(res, err));
 });
 
 // GET user by id
-router.get("/:id", (req, res) => {
+router.get("/:id", adminRoute, (req, res) => {
   dataBase
     .query("SELECT * FROM users WHERE id = :userid", {
       replacements: { userid: req.params.id },
       type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => res.status(200).json(response))
-    .catch((err) => cachtSqlError(res, err));
+    .catch((err) => catchSqlError(res, err));
 });
 
 //POST new user
@@ -86,7 +93,7 @@ router.post("/register", (req, res) => {
       type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => {
-      if (response.length) {
+      if (!response.length == 0) {
         res.status(409).json({
           success: false,
           error: "Email is already used",
@@ -109,9 +116,10 @@ router.post("/register", (req, res) => {
               id: response[0],
             });
           })
-          .catch((err) => cachtSqlError(res, err));
+          .catch((err) => catchSqlError(res, err));
       }
-    });
+    })
+    .catch((err) => catchSqlError(res, err));
 });
 
 module.exports = router;
