@@ -50,11 +50,21 @@ router.post("/create", userRoute, async function (req, res) {
     const currentProduct = productsFromDatabase.find(
       (prod) => prod.id === product.id
     );
-    console.log;
+    
     totalPrice = totalPrice + currentProduct.price * product.quantity;
     description.push(`${product.quantity}x${currentProduct.name}`);
   });
   description = description.join(", ");
+
+
+  var replacements ={
+    id_user: userId,
+    id_paymentType: req.body.id_paymentType,
+    state: "new",
+    description: description,
+    address: req.body.address,
+    totalPrice: totalPrice,
+  };
 
   dataBase
     .query(
@@ -62,16 +72,7 @@ router.post("/create", userRoute, async function (req, res) {
         (id_user, id_paymentType, state, description, address, totalPrice)
       VALUES
         (:id_user, :id_paymentType, :state, :description, :address, :totalPrice)`,
-      {
-        replacements: {
-          id_user: userId,
-          id_paymentType: req.body.id_paymentType,
-          state: "new",
-          description: description,
-          address: req.body.address,
-          totalPrice: totalPrice,
-        },
-      }
+      {replacements}
     )
     .then((response) => {
       req.body.products.forEach((product) => {
@@ -90,10 +91,16 @@ router.post("/create", userRoute, async function (req, res) {
         );
       });
       //response
+      var replacementsResponse ={
+        id_paymentType,
+        description,
+        address,
+        totalPrice
+      }=replacements;
       res.status(201).json({
         success: true,
         message: "Order created",
-        order: { id: response[0], ...req.body },
+        order: { id: response[0], ...replacementsResponse },
       });
     })
     .catch((err) => {

@@ -57,10 +57,7 @@ module.exports = {
   },
   decodeToken: function (token, callback) {
     if (token) {
-      jwt.verify(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAzLCJpc0FkbWluIjowLCJpYXQiOjE1OTQ4NDQzNDMsImV4cCI6MTU5NDkwNDM0M30.mIL1OS9ciLoFpxOKvFSC8TiA3O_5naqA5R_do2wuyqY",
-        secret,
-        (err, decoded) => {
+      jwt.verify(token,secret, (err, decoded) => {
           if (err) {
             return false;
           } else {
