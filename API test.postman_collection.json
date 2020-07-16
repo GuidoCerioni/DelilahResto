@@ -1,0 +1,460 @@
+{
+	"info": {
+		"_postman_id": "b3028053-fdce-4a41-8b25-960cf6d7f8f4",
+		"name": "API test",
+		"description": "Acámica project 3\n\nContact Support:\n Email: guidocerioni98@gmail.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Add a new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"asdas\",\n    \"password\": \"asdasdd\",\n    \"fullName\": \"Guidd sapasda\",\n    \"email\": \"389123911\",\n    \"phoneNumber\": \"2222222\",\n    \"address\": \"lala 3432\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"register"
+							]
+						},
+						"description": "Add a new user to the database"
+					},
+					"response": [
+						{
+							"name": "User already exist",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"userName\": \"Jorge365\",\n    \"fullName\": \"Jorge Pitusa\",\n    \"email\": \"jorgitopitusero@gmail.com\",\n    \"phoneNumber\": 3465226569,\n    \"adress\": \"Lugarcito 3558\",\n    \"password\": \"jorge456789\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Invalid input",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"userName\": \"Jorge365\",\n    \"fullName\": \"Jorge Pitusa\",\n    \"email\": \"jorgitopitusero@gmail.com\",\n    \"phoneNumber\": 3465226569,\n    \"adress\": \"Lugarcito 3558\",\n    \"password\": \"jorge456789\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "User created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"userName\": \"Jorge365\",\n    \"fullName\": \"Jorge Pitusa\",\n    \"email\": \"jorgitopitusero@gmail.com\",\n    \"phoneNumber\": 3465226569,\n    \"adress\": \"Lugarcito 3558\",\n    \"password\": \"jorge456789\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": 1,\n \"userName\": \"Jorge365\",\n \"fullName\": \"Jorge Pitusa\",\n \"email\": \"jorgitopitusero@gmail.com\",\n \"phoneNumber\": 3465226569,\n \"adress\": \"Lugarcito 3558\",\n \"password\": \"jorge456789\"\n}"
+						}
+					]
+				},
+				{
+					"name": "User login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"user\",\r\n    \"password\": \"user123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users (Admin-only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "Admin token",
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OTQ3ODYxMDQsImV4cCI6MTU5NDg0NjEwNH0.2Mc8CU-AhsTbalsZ01qsIQ-R1fRH1vQhxXDdYb3lgNs"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id (Admin-only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "Admin token",
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OTQ3ODYxMDQsImV4cCI6MTU5NDg0NjEwNH0.2Mc8CU-AhsTbalsZ01qsIQ-R1fRH1vQhxXDdYb3lgNs"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/user/17",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"17"
+							]
+						},
+						"description": "Admin-only"
+					},
+					"response": []
+				}
+			],
+			"description": "User related routes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c4fd5b87-fb7a-4685-8122-81dcb6ac168f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9e65d49-b639-493e-8476-ed719e61fd9c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "Create new product (Admin-only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "Admin token",
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OTQ3ODYxMDQsImV4cCI6MTU5NDg0NjEwNH0.2Mc8CU-AhsTbalsZ01qsIQ-R1fRH1vQhxXDdYb3lgNs"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Hamburguesa\",\r\n    \"price\": 100,\r\n    \"description\": \"Clasica hamburguesa con queso cheddar\",\r\n    \"inStock\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/product/create",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product (Admin-only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OTQ3ODYxMDQsImV4cCI6MTU5NDg0NjEwNH0.2Mc8CU-AhsTbalsZ01qsIQ-R1fRH1vQhxXDdYb3lgNs"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"id\":44,\r\n    \"name\": \"Hamburguesa con queso\",\r\n    \"price\": 150,\r\n    \"description\": \"Clasica hamburguesa con queso cheddar\",\r\n    \"inStock\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/product/edit",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete product (Admin-only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OTQ3ODYxMDQsImV4cCI6MTU5NDg0NjEwNH0.2Mc8CU-AhsTbalsZ01qsIQ-R1fRH1vQhxXDdYb3lgNs"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/product/delete/43",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product",
+								"delete",
+								"43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read all products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlzQWRtaW4iOjAsImlhdCI6MTU5NDc5MzIyOCwiZXhwIjoxNTk0ODUzMjI4fQ.BhsOII5Wm0fdif65cTHmostcZEy9WmEBYGv2aAZvi-Q",
+								"description": "User token",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/product",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cad99a49-2e21-4367-9b9d-88bb04135d48",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2992c0eb-74d8-453c-b2c5-8700634ccae0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "Create new order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "User token",
+								"key": "access-token",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAzLCJpc0FkbWluIjowLCJpYXQiOjE1OTQ4NDQzNDMsImV4cCI6MTU5NDkwNDM0M30.mIL1OS9ciLoFpxOKvFSC8TiA3O_5naqA5R_do2wuyqY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"products\": [\r\n        {\r\n            \"id\": 1,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\":2,\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"id_paymentType\": 1,\r\n    \"address\": \"sarasa 123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/order/create",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"order",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c2c73e43-4197-4cad-bc9a-379a4b8fee94",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "70b29e9c-fdbd-47ab-900b-841ae960317b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
