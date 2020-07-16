@@ -86,9 +86,9 @@ router.post("/register", (req, res) => {
         dataBase
           .query(
             `INSERT INTO users
-            (id, userName, password, fullName, email, phoneNumber, adress, isAdmin)
+            (id, userName, password, fullName, email, phoneNumber, address, isAdmin)
             VALUES
-            (0, :userName, :password, :fullName, :email, :phoneNumber, :adress, 0)
+            (0, :userName, :password, :fullName, :email, :phoneNumber, :address, 0)
             `,
             { replacements: req.body }
           )

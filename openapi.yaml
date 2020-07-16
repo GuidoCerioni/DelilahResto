@@ -2,59 +2,56 @@ openapi: 3.0.0
 
 info:
   title: "Delilah Restó"
-  
+
   description: "This is the API made for Delilah Restó"
-  
+
   version: "1.0.0"
-  
-servers: 
+
+servers:
   - url: http://delilahresto.com/v1
 
-
 tags:
-- name: "Users"
-  description: ""
-- name: "Products"
-  description: ""
-- name: "Pedidos" #Orders
-  description: ""
-
+  - name: "Users"
+    description: ""
+  - name: "Products"
+    description: ""
+  - name: "Pedidos" #Orders
+    description: ""
 
 paths:
   /users/register:
     post:
       tags:
-      - Users
+        - Users
       summary: Add a new user
       description: ""
       operationId: addUser
-      
+
       requestBody:
-       required: true
-       content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/User'
-            
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+
       responses:
-        "201": 
+        "201":
           description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         "405":
           description: Invalid input
-
 
   /users/login:
     get:
       tags:
-      - "Users"
+        - "Users"
       summary: Log in an existing user
       description: Login user and get the token
       operationId: loginUser
-      
+
       parameters:
         - name: userData
           in: path
@@ -63,15 +60,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object   
-                properties: 
+                type: object
+                properties:
                   userName:
-                   type: string
-                   example: JorgePitusa
+                    type: string
+                    example: JorgePitusa
                   password:
-                   type: string
-                   example: jorgito1234
-                  
+                    type: string
+                    example: jorgito1234
+
       responses:
         "200":
           description: Logged in
@@ -85,23 +82,22 @@ paths:
                     example: "46465as4654d6a4s54d6a"
         "405":
           description: "Validation exception"
-          
+
   /products:
     get:
-      tags: 
-      - "Products"
+      tags:
+        - "Products"
       summary: List products
       description: List all available products
-      
+
       parameters:
         - name: token
           in: header
           required: true
           description: user token
-          
-            
+
           example: "348992ghhuj288374"
-          
+
       responses:
         "200":
           description: OK
@@ -110,44 +106,40 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
-                
-                
+                  $ref: "#/components/schemas/Product"
+
     post:
-      tags: 
-      - "Products"
+      tags:
+        - "Products"
       summary: Admin exclusive
       description: Create a new product
-      
-      
+
       responses:
         "200":
           description: OK
-      
+
     put:
-      tags: 
-      - "Products"
+      tags:
+        - "Products"
       summary: Admin exclusive
       description: Edit an existing product
-      
+
       responses:
         "200":
           description: OK
-      
+
     delete:
-      tags: 
-      - "Products"
+      tags:
+        - "Products"
       summary: Admin exclusive
       description: Delete an existing product
-      
+
       responses:
         "204":
           description: OK
-      
-      
+
 components:
   schemas:
-    
     User:
       type: "object"
       properties:
@@ -167,7 +159,7 @@ components:
         phoneNumber:
           type: "string"
           example: 3465226569
-        adress:
+        address:
           type: "string"
           example: Lugarcito 3558
         password:
@@ -183,7 +175,7 @@ components:
         Descripción:
           type: "string"
           example: Hamburguesa con papas fritas light
-        
+
         Price per unit:
           type: "number"
           example: 300
@@ -200,7 +192,7 @@ components:
           example: 43
         paymentMethod:
           type: "string"
-          enum: ['efectivo', 'debito', 'credito']
+          enum: ["efectivo", "debito", "credito"]
           example: efectivo
         price:
           type: number
@@ -220,4 +212,3 @@ components:
               productCuantity:
                 type: "integer"
                 example: 2
-    

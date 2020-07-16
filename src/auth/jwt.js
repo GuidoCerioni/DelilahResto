@@ -7,14 +7,20 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ mensaje: "Token inválida" });
+          return res.status(401).json({ mensaje: "Invalid token" });
         } else {
-          if (decoded.isAdmin == 1) next();
+          if (decoded.isAdmin == 1) {
+            next();
+          } else {
+            return res
+              .status(200)
+              .json({ mensaje: "You dont have permission for this request" });
+          }
         }
       });
     } else {
       res.send({
-        mensaje: "Token no proveída.",
+        mensaje: "No token",
       });
     }
   },
@@ -23,12 +29,12 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ mensaje: "Token inválida" });
+          return res.status(401).json({ mensaje: "Invalid token" });
         } else next();
       });
     } else {
       res.send({
-        mensaje: "Token no proveída.",
+        mensaje: "No token",
       });
     }
   },
@@ -48,5 +54,20 @@ module.exports = {
       userName: response[0].userName,
       accesstoken: token,
     });
+  },
+  decodeToken: function (token, callback) {
+    if (token) {
+      jwt.verify(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAzLCJpc0FkbWluIjowLCJpYXQiOjE1OTQ4NDQzNDMsImV4cCI6MTU5NDkwNDM0M30.mIL1OS9ciLoFpxOKvFSC8TiA3O_5naqA5R_do2wuyqY",
+        secret,
+        (err, decoded) => {
+          if (err) {
+            return false;
+          } else {
+            callback(null, decoded);
+          }
+        }
+      );
+    }
   },
 };

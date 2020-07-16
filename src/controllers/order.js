@@ -4,7 +4,7 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
-const { adminRoute, userRoute } = require("../auth/jwt.js");
+const { adminRoute, userRoute, decodeToken } = require("../auth/jwt.js");
 
 /* General  error*/
 const catchSqlError = (res, err) => {
@@ -17,12 +17,90 @@ const catchSqlError = (res, err) => {
 };
 
 /* Create new order */
-router.post("/create", userRoute, (req, res) => {
-  
+router.post("/create", userRoute, async function (req, res) {
+  //get USER ID from the token
+  var userId;
+  decodeToken(req.headers["access-token"], function (err, res) {
+    // this callback function is called by lookup function with the result
+    if (err) {
+      throw err;
+    } else {
+      userId = res.id;
+    }
+  });
 
+  //get all products in array productsFromDatabase
+  var productsFromDatabase = [];
+  await dataBase
+    .query(`SELECT * FROM products`, {
+      type: dataBase.QueryTypes.SELECT,
+    })
+    .then((response) => {
+      productsFromDatabase = response;
+    })
+    .catch((err) => {
+      catchSqlError(res, err);
+    });
+  //console.log("productsFromDatabase2", productsFromDatabase);
 
+  //calculate order totalprice AND generate order description based on the products
+  var totalPrice = 0;
+  var description = [];
+  req.body.products.forEach((product) => {
+    const currentProduct = productsFromDatabase.find(
+      (prod) => prod.id === product.id
+    );
+    console.log;
+    totalPrice = totalPrice + currentProduct.price * product.quantity;
+    description.push(`${product.quantity}x${currentProduct.name}`);
+  });
+  description = description.join(", ");
 
   dataBase
+    .query(
+      `INSERT INTO orders
+        (id_user, id_paymentType, state, description, address, totalPrice)
+      VALUES
+        (:id_user, :id_paymentType, :state, :description, :address, :totalPrice)`,
+      {
+        replacements: {
+          id_user: userId,
+          id_paymentType: req.body.id_paymentType,
+          state: "new",
+          description: description,
+          address: req.body.address,
+          totalPrice: totalPrice,
+        },
+      }
+    )
+    .then((response) => {
+      req.body.products.forEach((product) => {
+        dataBase.query(
+          ` INSERT INTO orders_products
+              (id_order, id_product, productQuantity)
+            VALUES
+              (:id_order, :id_product, :productQuantity)`,
+          {
+            replacements: {
+              id_order: response[0],
+              id_product: product.id,
+              productQuantity: product.quantity,
+            },
+          }
+        );
+      });
+      //response
+      res.status(201).json({
+        success: true,
+        message: "Order created",
+        order: { id: response[0], ...req.body },
+      });
+    })
+    .catch((err) => {
+      catchSqlError(res, err);
+    });
+
+  /* dataBase
     .query(`SELECT * FROM products WHERE name=:name`, {
       replacements: {
         name: req.body.name,
@@ -30,7 +108,7 @@ router.post("/create", userRoute, (req, res) => {
       type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => {
-      /* if there isnt a Response, return error. */
+      
       if (!response.length == 0) {
         res.status(200).json({
           success: false,
@@ -66,7 +144,7 @@ router.post("/create", userRoute, (req, res) => {
     })
     .catch((err) => {
       catchSqlError(res, err);
-    });
+    });*/
 });
 
 /* Edit product */
