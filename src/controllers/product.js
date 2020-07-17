@@ -4,7 +4,11 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
+// Middlewares
+//    jwt
 const { adminRoute, userRoute } = require("../auth/jwt.js");
+//    validations
+const validations = require("../validations/validations.js");
 
 /* General  error*/
 const catchSqlError = (res, err) => {

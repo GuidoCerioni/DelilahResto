@@ -4,8 +4,11 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
-///jwt methods
+// Middlewares
+//    jwt
 const { adminRoute, generateToken } = require("../auth/jwt.js");
+//    validations
+const validations = require("../validations/validations.js");
 
 /* General  error*/
 const catchSqlError = (res, err) => {
@@ -13,7 +16,6 @@ const catchSqlError = (res, err) => {
   res.status(500).json({
     success: false,
     mensaje: "SQL error",
-
     errStack: err.original,
   });
 };
@@ -68,7 +70,7 @@ router.get("/:id", adminRoute, (req, res) => {
 });
 
 //POST new user
-router.post("/register", (req, res) => {
+router.post("/register", validations.newUser, (req, res) => {
   //Check if the user already exist
   dataBase
     .query(`SELECT * FROM users WHERE email = :email`, {
@@ -95,8 +97,7 @@ router.post("/register", (req, res) => {
           .then((response) => {
             res.status(201).json({
               success: true,
-              ...req.body,
-              id: response[0],
+              newUser: { ...req.body },
             });
           })
           .catch((err) => catchSqlError(res, err));
