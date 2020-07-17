@@ -1,4 +1,4 @@
-//  PRODUCT ROUTES
+//  ORDERS ROUTES
 const express = require("express");
 const router = express.Router();
 
@@ -15,6 +15,16 @@ const catchSqlError = (res, err) => {
     errStack: err.original,
   });
 };
+
+/* GET all orders */
+router.get("", adminRoute, (req, res) => {
+  dataBase
+    .query(`SELECT * FROM orders ORDER BY date DESC`, {
+      type: dataBase.QueryTypes.SELECT,
+    })
+    .then((response) => res.status(200).json(response))
+    .catch((err) => catchSqlError(res, err));
+});
 
 /* Create new order */
 router.post("/create", userRoute, async function (req, res) {
@@ -41,7 +51,6 @@ router.post("/create", userRoute, async function (req, res) {
     .catch((err) => {
       catchSqlError(res, err);
     });
-  //console.log("productsFromDatabase2", productsFromDatabase);
 
   //calculate order totalprice AND generate order description based on the products
   var totalPrice = 0;
@@ -50,14 +59,12 @@ router.post("/create", userRoute, async function (req, res) {
     const currentProduct = productsFromDatabase.find(
       (prod) => prod.id === product.id
     );
-    
     totalPrice = totalPrice + currentProduct.price * product.quantity;
     description.push(`${product.quantity}x${currentProduct.name}`);
   });
   description = description.join(", ");
 
-
-  var replacements ={
+  var replacements = {
     id_user: userId,
     id_paymentType: req.body.id_paymentType,
     state: "new",
@@ -72,7 +79,7 @@ router.post("/create", userRoute, async function (req, res) {
         (id_user, id_paymentType, state, description, address, totalPrice)
       VALUES
         (:id_user, :id_paymentType, :state, :description, :address, :totalPrice)`,
-      {replacements}
+      { replacements }
     )
     .then((response) => {
       req.body.products.forEach((product) => {
@@ -90,13 +97,26 @@ router.post("/create", userRoute, async function (req, res) {
           }
         );
       });
+
+      var replacements = {
+        id_user: userId,
+        id_paymentType: req.body.id_paymentType,
+        state: "new",
+        description: description,
+        address: req.body.address,
+        totalPrice: totalPrice,
+      };
+
       //response
-      var replacementsResponse ={
+      ({ id_paymentType, description, address, totalPrice } = replacements);
+
+      var replacementsResponse = {
         id_paymentType,
         description,
         address,
-        totalPrice
-      }=replacements;
+        totalPrice,
+      };
+
       res.status(201).json({
         success: true,
         message: "Order created",
@@ -106,58 +126,12 @@ router.post("/create", userRoute, async function (req, res) {
     .catch((err) => {
       catchSqlError(res, err);
     });
-
-  /* dataBase
-    .query(`SELECT * FROM products WHERE name=:name`, {
-      replacements: {
-        name: req.body.name,
-      },
-      type: dataBase.QueryTypes.SELECT,
-    })
-    .then((response) => {
-      
-      if (!response.length == 0) {
-        res.status(200).json({
-          success: false,
-          error: "Name is used",
-        });
-      } else {
-        dataBase
-          .query(
-            `INSERT INTO products
-              (id, name, price, description, inStock)
-            VALUES
-              (0, :name, :price, :description, :inStock)`,
-            {
-              replacements: {
-                name: req.body.name,
-                price: req.body.price,
-                description: req.body.description,
-                inStock: req.body.inStock,
-              },
-            }
-          )
-          .then((response) => {
-            res.status(201).json({
-              success: true,
-              message: "Product created",
-              product: { id: response[0], ...req.body },
-            });
-          })
-          .catch((err) => {
-            catchSqlError(res, err);
-          });
-      }
-    })
-    .catch((err) => {
-      catchSqlError(res, err);
-    });*/
 });
 
-/* Edit product */
+/* Edit order */
 router.put("/edit", adminRoute, (req, res) => {
   dataBase
-    .query(`SELECT * FROM products WHERE id=:id`, {
+    .query(`SELECT * FROM orders WHERE id=:id`, {
       replacements: {
         id: req.body.id,
       },
@@ -173,24 +147,25 @@ router.put("/edit", adminRoute, (req, res) => {
       } else {
         dataBase
           .query(
-            `UPDATE products SET
-              name= :name, price= :price, description= :description, inStock= :inStock
+            `UPDATE orders SET
+            id_paymentType=:id_paymentType, state=:state, description=:description, address=:address, totalPrice=:totalPrice
             WHERE id=:id`,
             {
               replacements: {
-                name: req.body.name,
-                price: req.body.price,
-                description: req.body.description,
-                inStock: req.body.inStock,
                 id: req.body.id,
+                id_paymentType: req.body.id_paymentType,
+                state: req.body.state,
+                description: req.body.description,
+                address: req.body.address,
+                totalPrice: req.body.totalPrice,
               },
             }
           )
           .then((response) => {
             res.status(200).json({
               success: true,
-              message: "Product updated",
-              editedProduct: { id: response[0], ...req.body },
+              message: "Order updated",
+              editedOrder: { id: response[0], ...req.body },
             });
           })
           .catch((err) => {
@@ -203,18 +178,18 @@ router.put("/edit", adminRoute, (req, res) => {
     });
 });
 
-/* Delete product */
+/* Delete order */
 router.delete("/delete/:id", adminRoute, (req, res) => {
-  let deletedProduct = {};
+  let deletedOrder = {};
   dataBase
-    .query(`SELECT * FROM products WHERE id=:id`, {
+    .query(`SELECT * FROM orders WHERE id=:id`, {
       replacements: {
         id: req.params.id,
       },
       type: dataBase.QueryTypes.SELECT,
     })
     .then((response) => {
-      deletedProduct = response[0];
+      deletedOrder = response[0];
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
         res.status(200).json({
@@ -223,7 +198,7 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
         });
       } else {
         dataBase
-          .query(`DELETE from products WHERE id=:id`, {
+          .query(`DELETE from orders WHERE id=:id`, {
             replacements: {
               id: req.params.id,
             },
@@ -231,8 +206,8 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
           .then((response) => {
             res.status(200).json({
               success: true,
-              message: "Product deleted",
-              deletedProduct,
+              message: "Order deleted",
+              deletedOrder,
             });
           })
           .catch((err) => {
@@ -243,16 +218,6 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
     .catch((err) => {
       catchSqlError(res, err);
     });
-});
-
-/* Read all products */
-router.get("", userRoute, (req, res) => {
-  dataBase
-    .query(`SELECT * FROM products`, {
-      type: dataBase.QueryTypes.SELECT,
-    })
-    .then((response) => res.status(200).json(response))
-    .catch((err) => catchSqlError(res, err));
 });
 
 module.exports = router;
