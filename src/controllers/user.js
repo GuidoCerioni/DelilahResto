@@ -8,7 +8,7 @@ const dataBase = require("../db/config.js");
 //    jwt
 const { adminRoute, generateToken } = require("../auth/jwt.js");
 //    validations
-const validations = require("../validations/validations.js");
+const { body, validationResult } = require("express-validator");
 
 /* General  error*/
 const catchSqlError = (res, err) => {
@@ -70,40 +70,69 @@ router.get("/:id", adminRoute, (req, res) => {
 });
 
 //POST new user
-router.post("/register", validations.newUser, (req, res) => {
-  //Check if the user already exist
-  dataBase
-    .query(`SELECT * FROM users WHERE email = :email`, {
-      replacements: { email: req.body.email },
-      type: dataBase.QueryTypes.SELECT,
-    })
-    .then((response) => {
-      if (!response.length == 0) {
-        res.status(409).json({
-          success: false,
-          error: "Email is already used",
-          rejectedUser: req.body,
-        });
-      } else {
-        dataBase
-          .query(
-            `INSERT INTO users
+router.post(
+  "/register",
+  //express-validator middleware
+  [
+    body("userName")
+      .isLength({ min: 5 })
+      .withMessage("must be at least 3 chars long"),
+    body("password")
+      .isLength({ min: 8 })
+      .withMessage("must be at least 8 chars long"),
+    body("fullName")
+      .isLength({ min: 5 })
+      .withMessage("must be at least 5 chars long"),
+    body("email")
+      .normalizeEmail()
+      .isEmail()
+      .withMessage("must be a valid email"),
+
+    body("phoneNumber")
+      .isLength({ min: 7 })
+      .withMessage("must be a valid phone number"),
+    body("address").isLength({ min: 7 }).withMessage("must be a valid address"),
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      //controlling posible errors
+      return res.status(422).json({ errors: errors.array() });
+    }
+    //Check if the user already exist
+    dataBase
+      .query(`SELECT * FROM users WHERE email = :email`, {
+        replacements: { email: req.body.email },
+        type: dataBase.QueryTypes.SELECT,
+      })
+      .then((response) => {
+        if (!response.length == 0) {
+          res.status(409).json({
+            success: false,
+            error: "Email is already used",
+            rejectedUser: req.body,
+          });
+        } else {
+          dataBase
+            .query(
+              `INSERT INTO users
             (id, userName, password, fullName, email, phoneNumber, address, isAdmin)
             VALUES
             (0, :userName, :password, :fullName, :email, :phoneNumber, :address, 0)
             `,
-            { replacements: req.body }
-          )
-          .then((response) => {
-            res.status(201).json({
-              success: true,
-              newUser: { ...req.body },
-            });
-          })
-          .catch((err) => catchSqlError(res, err));
-      }
-    })
-    .catch((err) => catchSqlError(res, err));
-});
+              { replacements: req.body }
+            )
+            .then((response) => {
+              res.status(201).json({
+                success: true,
+                newUser: { ...req.body },
+              });
+            })
+            .catch((err) => catchSqlError(res, err));
+        }
+      })
+      .catch((err) => catchSqlError(res, err));
+  }
+);
 
 module.exports = router;

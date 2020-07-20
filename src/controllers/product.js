@@ -8,7 +8,6 @@ const dataBase = require("../db/config.js");
 //    jwt
 const { adminRoute, userRoute } = require("../auth/jwt.js");
 //    validations
-const validations = require("../validations/validations.js");
 
 /* General  error*/
 const catchSqlError = (res, err) => {

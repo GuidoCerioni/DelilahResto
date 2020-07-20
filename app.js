@@ -4,13 +4,13 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 var cors = require("cors");
-
 const path = require("path");
 
 var jwtdecoder = require("./src/auth/jwt.js");
 
 /** Middlewares generales */
 app.use(bodyParser.json());
+
 /* cors */
 app.use(cors());
 
