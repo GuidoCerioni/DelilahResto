@@ -37,17 +37,19 @@ router.post(
   //express-validator middleware
   [
     body("address").isLength({ min: 7 }).withMessage("must be a valid address"),
+    body("id_paymentType").isn,
   ],
   (req, res, next) => {
-    if (typeof (req.product) === 'object') {
+    if (typeof req.product === "object") {
       for (const [key, value] of Object.entries(req.product)) {
         console.log(`${key}: ${value}`);
-        if(typeof key === 'string')
+        if (typeof key === "string") {
+        }
       }
-      if(typeof tamano === 'number')
+      if (typeof tamano === "number") {
+      }
     }
-
-  }
+  },
   async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
