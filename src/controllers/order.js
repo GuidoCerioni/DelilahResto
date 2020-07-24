@@ -36,29 +36,56 @@ router.post(
   userRoute,
   //express-validator middleware
   [
-    body("address").isLength({ min: 7 }).withMessage("must be a valid address"),
-    body("id_paymentType").isn,
+    body("id_paymentType").isNumeric().withMessage("must be a number (check payment types)"),
+    body("address").isAlphanumeric().withMessage("must be alphanumeric").isLength({ min: 7 }).withMessage("must be a valid address"),
+
   ],
   (req, res, next) => {
-    if (typeof req.product === "object") {
-      for (const [key, value] of Object.entries(req.product)) {
-        console.log(`${key}: ${value}`);
-        if (typeof key === "string") {
-        }
-      }
-      if (typeof tamano === "number") {
-      }
+    let flag=1;
+
+    if (typeof (req.body.products) === "object") {
+      let flag =1;
+      req.body.products.forEach((element)=> {
+        for (const [key, value] of Object.entries(element)) {
+          if(!(typeof(key)==="string"&&typeof(value)==="number")){
+            console.log("flag");
+            flag=0;}
+        
+      }})
+      
+    }else{
+      return res.status(422).json({
+        success: "false",
+        errors: [{
+            value: req.body.products,
+            msg: "products must be an array",
+            param: "products",
+            location: "body"
+          }]
+      })
     }
+    if(flag){next();}
+    else{{
+      return res.status(422).json({
+        success: "false",
+        errors: [{
+            value: req.body.products,
+            msg: "products must be an array",
+            param: "products",
+            location: "body"
+          }]
+      })
+    }}
   },
   async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       //controlling posible errors
-      return res.status(422).json({ errors: errors.array() });
+      return res.status(422).json({success:"false", errors: errors.array() });
     }
 
     //get USER ID from the token
-    var userId;
+    let userId;
     decodeToken(req.headers["access-token"], function (err, res) {
       // this callback function is called by lookup function with the result
       if (err) {

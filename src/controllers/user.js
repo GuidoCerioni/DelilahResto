@@ -74,10 +74,10 @@ router.post(
   "/register",
   //express-validator middleware
   [
-    body("userName")
+    body("userName").isAlphanumeric().withMessage("must be alphanumeric")
       .isLength({ min: 5 })
-      .withMessage("must be at least 3 chars long"),
-    body("password")
+      .withMessage("must be at least 5 chars long"),
+    body("password").isAlphanumeric().withMessage("must be alphanumeric")
       .isLength({ min: 8 })
       .withMessage("must be at least 8 chars long"),
     body("fullName")
@@ -91,13 +91,13 @@ router.post(
     body("phoneNumber")
       .isLength({ min: 7 })
       .withMessage("must be a valid phone number"),
-    body("address").isLength({ min: 7 }).withMessage("must be a valid address"),
+    body("address").isLength({ min: 4 }).withMessage("must be a valid address"),
   ],
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       //controlling posible errors
-      return res.status(422).json({ errors: errors.array() });
+      return res.status(422).json({success:"false", errors: errors.array() });
     }
     //Check if the user already exist
     dataBase
