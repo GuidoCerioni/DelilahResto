@@ -36,52 +36,63 @@ router.post(
   userRoute,
   //express-validator middleware
   [
-    body("id_paymentType").isNumeric().withMessage("must be a number (check payment types)"),
-    body("address").isAlphanumeric().withMessage("must be alphanumeric").isLength({ min: 7 }).withMessage("must be a valid address"),
-
+    body("id_paymentType")
+      .isNumeric()
+      .withMessage("must be a number (check payment types)"),
+    body("address")
+      .isAlphanumeric()
+      .withMessage("must be alphanumeric")
+      .isLength({ min: 7 })
+      .withMessage("must be a valid address"),
   ],
   (req, res, next) => {
-    let flag=1;
-
-    if (typeof (req.body.products) === "object") {
-      let flag =1;
-      req.body.products.forEach((element)=> {
+    let flag = 1;
+    if (typeof req.body.products === "object") {
+      let flag = 1;
+      req.body.products.forEach((element) => {
         for (const [key, value] of Object.entries(element)) {
-          if(!(typeof(key)==="string"&&typeof(value)==="number")){
+          if (!(typeof key === "string" && typeof value === "number")) {
             console.log("flag");
-            flag=0;}
-        
-      }})
-      
-    }else{
+            flag = 0;
+          }
+        }
+      });
+    } else {
       return res.status(422).json({
         success: "false",
-        errors: [{
+        errors: [
+          {
             value: req.body.products,
             msg: "products must be an array",
             param: "products",
-            location: "body"
-          }]
-      })
+            location: "body",
+          },
+        ],
+      });
     }
-    if(flag){next();}
-    else{{
-      return res.status(422).json({
-        success: "false",
-        errors: [{
-            value: req.body.products,
-            msg: "products must be an array",
-            param: "products",
-            location: "body"
-          }]
-      })
-    }}
+    if (flag) {
+      next();
+    } else {
+      {
+        return res.status(422).json({
+          success: "false",
+          errors: [
+            {
+              value: req.body.products,
+              msg: "products must be an array",
+              param: "products",
+              location: "body",
+            },
+          ],
+        });
+      }
+    }
   },
   async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       //controlling posible errors
-      return res.status(422).json({success:"false", errors: errors.array() });
+      return res.status(422).json({ success: "false", errors: errors.array() });
     }
 
     //get USER ID from the token

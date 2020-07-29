@@ -7,21 +7,19 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ mensaje: "Invalid token" });
+          return res.status(401).json({ msg: "Invalid token" });
         } else {
           if (decoded.isAdmin == 1) {
             next();
           } else {
             return res
               .status(200)
-              .json({ mensaje: "You dont have permission for this request" });
+              .json({ msg: "You dont have permission for this request" });
           }
         }
       });
     } else {
-      res.send({
-        mensaje: "No token",
-      });
+      return res.status(401).json({ msg: "No token" });
     }
   },
   userRoute: function (req, res, next) {
@@ -29,12 +27,12 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ mensaje: "Invalid token" });
+          return res.status(401).json({ msg: "Invalid token" });
         } else next();
       });
     } else {
       res.send({
-        mensaje: "No token",
+        msg: "No token",
       });
     }
   },
@@ -57,14 +55,13 @@ module.exports = {
   },
   decodeToken: function (token, callback) {
     if (token) {
-      jwt.verify(token,secret, (err, decoded) => {
-          if (err) {
-            return false;
-          } else {
-            callback(null, decoded);
-          }
+      jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+          return false;
+        } else {
+          callback(null, decoded);
         }
-      );
+      });
     }
   },
 };
