@@ -4,10 +4,9 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
-// Middlewares
+// Middlewares import
 //    jwt
 const { adminRoute, userRoute } = require("../auth/jwt.js");
-//    validations
 
 /* General  error*/
 const catchSqlError = (res, err) => {
@@ -19,7 +18,7 @@ const catchSqlError = (res, err) => {
   });
 };
 /* Create new product */
-router.post("/create", adminRoute, (req, res) => {
+router.post("", adminRoute, (req, res) => {
   dataBase
     .query(`SELECT * FROM products WHERE name=:name`, {
       replacements: {
@@ -30,7 +29,7 @@ router.post("/create", adminRoute, (req, res) => {
     .then((response) => {
       /* if there isnt a Response, return error. */
       if (!response.length == 0) {
-        res.status(200).json({
+        res.status(422).json({
           success: false,
           error: "Name is used",
         });
@@ -68,7 +67,7 @@ router.post("/create", adminRoute, (req, res) => {
 });
 
 /* Edit product */
-router.put("/edit", adminRoute, (req, res) => {
+router.put("", adminRoute, (req, res) => {
   dataBase
     .query(`SELECT * FROM products WHERE id=:id`, {
       replacements: {
@@ -79,7 +78,7 @@ router.put("/edit", adminRoute, (req, res) => {
     .then((response) => {
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
-        res.status(200).json({
+        res.status(422).json({
           success: false,
           error: "Incorrect ID",
         });
@@ -117,7 +116,7 @@ router.put("/edit", adminRoute, (req, res) => {
 });
 
 /* Delete product */
-router.delete("/delete/:id", adminRoute, (req, res) => {
+router.delete("/:id", adminRoute, (req, res) => {
   let deletedProduct = {};
   dataBase
     .query(`SELECT * FROM products WHERE id=:id`, {
@@ -130,7 +129,7 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
       deletedProduct = response[0];
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
-        res.status(200).json({
+        res.status(422).json({
           success: false,
           error: "Incorrect ID",
         });
@@ -142,7 +141,7 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
             },
           })
           .then((response) => {
-            res.status(200).json({
+            res.status(204).json({
               success: true,
               message: "Product deleted",
               deletedProduct,
@@ -158,7 +157,7 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
     });
 });
 
-/* Read all products */
+/* Get all products */
 router.get("", userRoute, (req, res) => {
   dataBase
     .query(`SELECT * FROM products`, {

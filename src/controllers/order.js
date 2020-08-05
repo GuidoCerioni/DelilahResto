@@ -4,7 +4,7 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
-// Middlewares
+// Middlewares import
 //    jwt
 const { adminRoute, userRoute, decodeToken } = require("../auth/jwt.js");
 //    validations
@@ -39,20 +39,30 @@ router.post(
     body("id_paymentType")
       .isNumeric()
       .withMessage("must be a number (check payment types)"),
-    body("address")
-      .isAlphanumeric()
-      .withMessage("must be alphanumeric")
-      .isLength({ min: 7 })
-      .withMessage("must be a valid address"),
+    body("address").isLength({ min: 5 }).withMessage("must be a valid address"),
   ],
   (req, res, next) => {
+    /* payment type validation */
+    if (!(req.body.id_paymentType > 0)) {
+      return res.status(422).json({
+        success: "false",
+        errors: [
+          {
+            value: req.body.id_paymentType,
+            msg: "out of range (check payment types)",
+            param: "id_paymentType",
+            location: "body",
+          },
+        ],
+      });
+    }
+
+    /* object validations */
     let flag = 1;
     if (typeof req.body.products === "object") {
-      let flag = 1;
       req.body.products.forEach((element) => {
         for (const [key, value] of Object.entries(element)) {
           if (!(typeof key === "string" && typeof value === "number")) {
-            console.log("flag");
             flag = 0;
           }
         }
@@ -79,7 +89,7 @@ router.post(
           errors: [
             {
               value: req.body.products,
-              msg: "products must be an array",
+              msg: "error in product object",
               param: "products",
               location: "body",
             },
@@ -165,19 +175,10 @@ router.post(
           );
         });
 
-        var replacements = {
-          id_user: userId,
-          id_paymentType: req.body.id_paymentType,
-          state: "new",
-          description: description,
-          address: req.body.address,
-          totalPrice: totalPrice,
-        };
-
-        //response
+        //creating response
         ({ id_paymentType, description, address, totalPrice } = replacements);
 
-        var replacementsResponse = {
+        var successResponse = {
           id_paymentType,
           description,
           address,
@@ -187,7 +188,7 @@ router.post(
         res.status(201).json({
           success: true,
           message: "Order created",
-          order: { id: response[0], ...replacementsResponse },
+          order: { id: response[0], ...successResponse },
         });
       })
       .catch((err) => {
@@ -208,7 +209,7 @@ router.put("/edit", adminRoute, (req, res) => {
     .then((response) => {
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
-        res.status(200).json({
+        res.status(422).json({
           success: false,
           error: "Incorrect ID",
         });
@@ -260,7 +261,7 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
       deletedOrder = response[0];
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
-        res.status(200).json({
+        res.status(422).json({
           success: false,
           error: "Incorrect ID",
         });

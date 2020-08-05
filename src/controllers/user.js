@@ -4,7 +4,7 @@ const router = express.Router();
 
 const dataBase = require("../db/config.js");
 
-// Middlewares
+// Middlewares import
 //    jwt
 const { adminRoute, generateToken } = require("../auth/jwt.js");
 //    validations
@@ -35,7 +35,7 @@ router.post("/login", (req, res) => {
     )
     .then((response) => {
       if (response.length == 0) {
-        res.status(200).json({
+        res.status(401).json({
           success: false,
           error: "incorrect user-password",
         });
@@ -74,10 +74,14 @@ router.post(
   "/register",
   //express-validator middleware
   [
-    body("userName").isAlphanumeric().withMessage("must be alphanumeric")
+    body("userName")
+      .isAlphanumeric()
+      .withMessage("must be alphanumeric")
       .isLength({ min: 5 })
       .withMessage("must be at least 5 chars long"),
-    body("password").isAlphanumeric().withMessage("must be alphanumeric")
+    body("password")
+      .isAlphanumeric()
+      .withMessage("must be alphanumeric")
       .isLength({ min: 8 })
       .withMessage("must be at least 8 chars long"),
     body("fullName")
@@ -97,7 +101,7 @@ router.post(
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       //controlling posible errors
-      return res.status(422).json({success:"false", errors: errors.array() });
+      return res.status(422).json({ success: "false", errors: errors.array() });
     }
     //Check if the user already exist
     dataBase
