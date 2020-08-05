@@ -1,0 +1,853 @@
+openapi: 3.0.0
+info:
+  title: Delilah Restó API
+  description: Acámica project 3
+  contact:
+    email: guidocerioni98@gmail.com
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/GuidoCerioni/Resto/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://delilahresto.com/v1
+  description: Delilah
+tags:
+- name: Users
+- name: Products
+- name: Pedidos
+paths:
+  /user/register:
+    post:
+      tags:
+      - Users
+      summary: Add a new user
+      description: Add a new user to the database
+      operationId: addUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Userbodypost'
+        required: true
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "409":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_409'
+        "422":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorInvalidInput'
+  /user/login:
+    post:
+      tags:
+      - Users
+      summary: Log in an existing user
+      description: Login user and get the token
+      operationId: loginUser
+      requestBody:
+        description: username and password to login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+  /user:
+    get:
+      tags:
+      - Users
+      summary: Get all users (Admin exclusive)
+      description: Get a list with all users
+      operationId: GetallUser
+      parameters:
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Array with all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Userforadmin'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+  /user/{id}:
+    get:
+      tags:
+      - Users
+      summary: Get user by id (Admin exclusive)
+      description: Get a user by id
+      operationId: GetUserbyID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Array with all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userforadmin'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+  /product:
+    get:
+      tags:
+      - Products
+      summary: List products
+      description: List all available products
+      parameters:
+      - name: access-token
+        in: header
+        description: User token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+    put:
+      tags:
+      - Products
+      summary: Edit product (Admin exclusive)
+      description: Edit an existing product
+      parameters:
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditedProduct'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+    post:
+      tags:
+      - Products
+      summary: Add product (Admin exclusive)
+      description: Create a new product
+      parameters:
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPost'
+        required: true
+      responses:
+        "200":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422_1'
+  /product/{id}:
+    delete:
+      tags:
+      - Products
+      summary: Delete product (Admin exclusive)
+      description: Delete an existing product
+      parameters:
+      - name: id
+        in: path
+        description: The id of the product you want to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedProduct'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+  /orders:
+    get:
+      tags:
+      - Orders
+      summary: Get all orders (Admin exclusive)
+      description: Get a list with all orders
+      parameters:
+      - name: access-token
+        in: header
+        description: Admin token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+    put:
+      tags:
+      - Orders
+      summary: Edit an order (Admin exclusive)
+      description: Allows the admin to edit an order
+      parameters:
+      - name: access-token
+        in: header
+        description: User token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: The id in the request body refers to the id of the order you
+          want to edit. The other properties are the ones you change.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditOrder'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditedOrder'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+    post:
+      tags:
+      - Orders
+      summary: Create a new order
+      description: Allows an user to create a new order
+      parameters:
+      - name: access-token
+        in: header
+        description: User token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrder'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        "401":
+          description: Validation exception - Ivalid token - No token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "422":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorInvalidInput'
+  /orders/{id}:
+    delete:
+      tags:
+      - Orders
+      summary: Delete Order (Admin exclusive)
+      description: Delete an existing order
+      parameters:
+      - name: id
+        in: path
+        description: The id of the order you want to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedOrder'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+components:
+  schemas:
+    errorInvalidInput:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/errorInvalidInput_errors'
+    Userbodypost:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: Jorge365
+        password:
+          type: string
+          example: jorge456789
+        fullName:
+          type: string
+          example: Jorge Pitusa
+        email:
+          type: string
+          example: jorgitopitusero@gmail.com
+        phoneNumber:
+          type: string
+          example: "3465226569"
+        address:
+          type: string
+          example: Lugarcito 3558
+    Userforadmin:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        userName:
+          type: string
+          example: Jorge365
+        password:
+          type: string
+          example: jorge456789
+        fullName:
+          type: string
+          example: Jorge Pitusa
+        email:
+          type: string
+          example: jorgitopitusero@gmail.com
+        phoneNumber:
+          type: string
+          example: "3465226569"
+        address:
+          type: string
+          example: Lugarcito 3558
+        isAdmin:
+          type: boolean
+          example: false
+    Usercreatedresponsesuccess:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: Jorge365
+        password:
+          type: string
+          example: jorge456789
+        fullName:
+          type: string
+          example: Jorge Pitusa
+        email:
+          type: string
+          example: jorgitopitusero@gmail.com
+        phoneNumber:
+          type: string
+          example: "3465226569"
+        address:
+          type: string
+          example: Lugarcito 3558
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: integer
+          format: int64
+          example: 150
+        description:
+          type: string
+          example: Hamburguesa con queso y papas fritas light
+        inStock:
+          type: boolean
+          example: false
+    EditedProduct:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Product updated
+        editedProduct:
+          $ref: '#/components/schemas/EditedProduct_editedProduct'
+    DeletedProduct:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Product deleted
+        deletedOrder:
+          $ref: '#/components/schemas/DeletedProduct_deletedOrder'
+    ProductPost:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: number
+          example: 300
+        description:
+          type: string
+          example: Hamburguesa con papas fritas light
+        inStock:
+          type: boolean
+          example: true
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 5
+        id_user:
+          type: integer
+          format: int64
+          example: 43
+        id_paymentType:
+          type: integer
+          example: 1
+        state:
+          type: string
+          example: new
+        date:
+          type: string
+          description: date
+          example: 2020-07-29T15:56:27.000Z
+        description:
+          type: string
+          example: 2xHamburguesa con queso
+        address:
+          type: string
+          example: sarasa 123
+        totalPrice:
+          type: integer
+          example: 550
+    CreateOrder:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateOrder_products'
+        id_paymentType:
+          type: integer
+          example: 1
+        address:
+          type: string
+          example: sarasa 123
+    EditOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 5
+        id_paymentType:
+          type: integer
+          example: 1
+        state:
+          type: string
+          example: new
+        description:
+          type: string
+          example: 2xHamburguesa con queso
+        address:
+          type: string
+          example: sarasa 123
+        totalPrice:
+          type: integer
+          example: 550
+    EditedOrder:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Order updated
+        editedOrder:
+          $ref: '#/components/schemas/EditedOrder_editedOrder'
+    DeletedOrder:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Order deleted
+        deletedOrder:
+          $ref: '#/components/schemas/DeletedOrder_deletedOrder'
+    inline_response_201:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        newUser:
+          $ref: '#/components/schemas/inline_response_201_newUser'
+    inline_response_409:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: Email is already used
+    body:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: JorgePitusa
+        password:
+          type: string
+          example: jorgito1234
+    inline_response_200:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        userName:
+          type: string
+          example: admin
+        accesstoken:
+          type: string
+          example: eyJhbGciOiJIUzI1jshhsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwLCJpc0FkbWluIjoxLCJpYXQiOjE1OT00TY4NTIsImV4cCI6MTU5NjU1NTg1Mn0.o9r6q2IXlOmzJVhTNoAasdsmyhfLFnp2ckw7GVxAuLA
+    inline_response_401:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: incorrect user-password
+    inline_response_401_1:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Invalid token or no token
+    inline_response_422:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: Incorrect ID
+    inline_response_200_1:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Product created
+        product:
+          $ref: '#/components/schemas/ProductPost'
+    inline_response_422_1:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: Name is used
+    errorInvalidInput_errors:
+      type: object
+      properties:
+        value:
+          type: string
+        msg:
+          type: string
+        param:
+          type: string
+        location:
+          type: string
+          example: body
+    EditedProduct_editedProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: integer
+          format: int64
+          example: 150
+        description:
+          type: string
+          example: Hamburguesa con queso
+        inStock:
+          type: boolean
+          example: false
+    DeletedProduct_deletedOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: integer
+          format: int64
+          example: 150
+        description:
+          type: string
+          example: Hamburguesa con queso y papas fritas light
+        inStock:
+          type: boolean
+          example: false
+    CreateOrder_products:
+      type: object
+      properties:
+        productId:
+          type: integer
+          example: 3
+        productCuantity:
+          type: integer
+          example: 2
+    EditedOrder_editedOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 5
+        id_paymentType:
+          type: integer
+          example: 1
+        state:
+          type: string
+          example: new
+        description:
+          type: string
+          example: 2xHamburguesa con queso
+        address:
+          type: string
+          example: sarasa 123
+        totalPrice:
+          type: integer
+          example: 550
+    DeletedOrder_deletedOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 5
+        id_user:
+          type: integer
+          format: int64
+          example: 43
+        id_paymentType:
+          type: integer
+          example: 1
+        state:
+          type: string
+          example: new
+        date:
+          type: string
+          description: date
+          example: 2020-07-29T15:56:27.000Z
+        description:
+          type: string
+          example: 2xHamburguesa con queso
+        address:
+          type: string
+          example: sarasa 123
+        totalPrice:
+          type: integer
+          example: 550
+    inline_response_201_newUser:
+      type: object
+      properties:
+        schema:
+          $ref: '#/components/schemas/Usercreatedresponsesuccess'
