@@ -32,7 +32,8 @@ router.post("/login", (req, res) => {
         },
         type: dataBase.QueryTypes.SELECT,
       }
-    )
+  )
+    
     .then((response) => {
       if (response.length == 0) {
         res.status(401).json({

@@ -152,6 +152,7 @@ router.delete("/:id", adminRoute, (req, res) => {
           });
       }
     })
+    
     .catch((err) => {
       catchSqlError(res, err);
     });

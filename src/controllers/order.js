@@ -206,6 +206,7 @@ router.put("/edit", adminRoute, (req, res) => {
       },
       type: dataBase.QueryTypes.SELECT,
     })
+    
     .then((response) => {
       /* if there isnt a Response, return error. */
       if (response.length == 0) {

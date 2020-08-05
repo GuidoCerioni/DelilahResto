@@ -22,6 +22,7 @@ module.exports = {
       return res.status(401).json({ msg: "No token" });
     }
   },
+
   userRoute: function (req, res, next) {
     const token = req.headers["access-token"];
     if (token) {

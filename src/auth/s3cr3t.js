@@ -1,3 +1,4 @@
 module.exports = {
-  secret: "holaqase", //JWT password
+  secret: "holaqase",
+   //JWT password
 };
