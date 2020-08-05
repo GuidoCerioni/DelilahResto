@@ -20,7 +20,7 @@ node -v
 ```
 This should print the version number.
 
-2. Clone this repository into your computer. Get to the folder you clone it into and install the npm dependencies. You can do that from your command line tool.
+2. Clone this repository into your computer. Get to the folder you clone it and install the npm dependencies. You can do that from your command line tool.
 ```bash
 git clone https://github.com/GuidoCerioni/DelilahResto
 cd DelilahResto
