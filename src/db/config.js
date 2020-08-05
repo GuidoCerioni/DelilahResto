@@ -1,19 +1,14 @@
-/* DATABASE */
-/*const USERNAME = "root";
+/* DATABASE CONFIG */
+const USERNAME = "root";
 const PASSWORD = "";
-const DATABASE = "delilahresto";  DATABASE name 
-
-const sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
-  host: "localhost",
-  dialect: "mysql",
-  port: 3306,
-}); */
+const PORT = 3306;
+const DATABASE_NAME = "delilahresto";
 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("mysql://root:@127.0.0.1:3306/delilahresto");
+const sequelize = new Sequelize(`mysql://${USERNAME}:${PASSWORD}@127.0.0.1:${PORT}/${DATABASE_NAME}`);
 sequelize
   .authenticate()
-  .then(() => console.log("DB - Connection has been established successfully."))
+  .then(() => console.log("Database connection has been established successfully."))
   .catch((error) =>console.error("Unable to connect to the database: ", error));
 
 module.exports = sequelize;
