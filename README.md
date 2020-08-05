@@ -19,23 +19,28 @@ API Rest built in NodeJS, using express and MySQL. This API is made to manage or
 node -v
 ```
 This should print the version number.
-2. Clone this repository into your computer. Get to the folder you clone it into and install the npm dependencies. You can do that from your command line tool.
+
+2. Clone this repository into your computer. Get to the folder you clone it and install the npm dependencies. You can do that from your command line tool.
 ```bash
 git clone https://github.com/GuidoCerioni/DelilahResto
 cd DelilahResto
 npm install
 ```
+
 3. Start the server, also from your commnand line tool.
 ```bash
 npm start
 ```
 
-# Endpoints 
-The endpoints are detailed in this YALM file (../documentation/swagger.yml) and they were designed following the OPEN API specifications. Import the file into the Swagger Editor (https://editor.swagger.io/#) for a better understanding of thte API endopoints. 
+# Endpoints documentation
+Check the available endpoints [here](https://app.swaggerhub.com/apis-docs/GuidoCerioni/DelilahResto_API/1.0.0#/)(this is a swagger documentation, the [YAML file](./documentation/endpointsDOC.yaml) is in the repo just in case). If this doesn't work, there is also a html version of the endpoint documentation [here](./documentation/endpointsDOC.html).
 
-# Endpoints Testing
-By importing the following file (../documentation/Delilah Resto.postman_collection.json) in Postman aplication you will be able to test all the endopoints. (Remember that some require role validation so you will have to include the correspondant token in the header authorization). 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/73852f9dcdb9706612d3)
+# Test
+To test the endpoints you should have both MySQL and the server started. The API base url is `localhost:3000/`.
+Anyways, I recomend you use Postman. By clicking here [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/23a3a827e5984806c6a0) you will be able to import the colection with all the API endpoints with preloaded data.
 
-[View documentation](https://app.swaggerhub.com/apis-docs/GuidoCerioni/Resto/1.0.0)
+
+
+
+
 
