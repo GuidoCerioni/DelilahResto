@@ -7,24 +7,25 @@ API Rest built in NodeJS, using express and MySQL. This API is made to manage or
 - User log in using Json Web Token
 - Role validation
 
-# Set up
+# MySQL set up
 1. Install [XAMPP](https://www.apachefriends.org/index.html) to serve MySQL.
 2. Start XAMPP and click on the `Start` button on Apache and MySQL.
-3. Click on the `Admin` button on MySQL and check if you have an user called "root".
-** if using a different port, username or root, you can change the predifined ones in file '../database/dataConnection'**
-4. Import (./database/dbForIMport.sql) containing all the SQL queries to create the database and create the needed tables. There are also queries to populate these tables. 
-
-
+3. Click on the `Admin` button on MySQL and check if you have an user called "root". Also check if the MySQL port is 3306. (If you want to use a different port or username/password, check [this file](./src/db/config.js).)
+4. Import [this file](./src/db/databaseQueries.js) in MySQL Admin. This will create the database and the tables. Some default data will also be added.
 
 # Server init
-1. You'll need nodejs (https://nodejs.org). Check if you already have it installed in your system.
-2. Once confirmed nodejs is in your system clone this repository, get into it and install its dependencies. Use these commands in your terminal
+1. Install [NodeJS](https://nodejs.org). To see if Node is installed, open the Windows Command Prompt, Powershell or a similar command line tool, and type
 ```bash
-git clone https://github.com/vickycalvo/DelilahResto
-cd delilah-resto
+node -v
+```
+This should print the version number.
+2. Clone this repository into your computer. Get to the folder you clone it into and install the npm dependencies. You can do that from your command line tool.
+```bash
+git clone https://github.com/GuidoCerioni/DelilahResto
+cd DelilahResto
 npm install
 ```
-3. Start server. 
+3. Start the server, also from your commnand line tool.
 ```bash
 npm start
 ```
