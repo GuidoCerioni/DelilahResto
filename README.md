@@ -33,7 +33,7 @@ npm start
 ```
 
 # Endpoints documentation
-Check the available endpoints [here](https://app.swaggerhub.com/apis-docs/GuidoCerioni/DelilahResto_API/1.0.0#/)(this is a swagger documentation, the [YAML file](./documentation/endpointsDOC.yaml) is in the repo just in case). If this doesn't work, there is also a html version of the endpoint documentation [here](./documentation/endpointsDOC.html).
+Check the available endpoints [here](https://app.swaggerhub.com/apis-docs/GuidoCerioni/DelilahResto_API/1.0.0#/) (this is a swagger documentation, the [YAML file](./documentation/endpointsDOC.yaml) is in the repo just in case). If this doesn't work, there is also a html version of the endpoint documentation [here](./documentation/endpointsDOC.html).
 
 # Test
 To test the endpoints you should have both MySQL and the server started. The API base url is `localhost:3000/`.
