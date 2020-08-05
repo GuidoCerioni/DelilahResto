@@ -9,8 +9,8 @@ API Rest built in NodeJS, using express and MySQL. This API is made to manage or
 
 # Set up
 1. Install [XAMPP](https://www.apachefriends.org/index.html) to serve MySQL.
-2. Start XAMPP and click on the `start` button on Apache and MySQL.
-3. Make sure you have a profile with both username and password 'root' in MySQL.
+2. Start XAMPP and click on the `Start` button on Apache and MySQL.
+3. Click on the `Admin` button on MySQL and check if you have an user called "root".
 ** if using a different port, username or root, you can change the predifined ones in file '../database/dataConnection'**
 4. Import (./database/dbForIMport.sql) containing all the SQL queries to create the database and create the needed tables. There are also queries to populate these tables. 
 
