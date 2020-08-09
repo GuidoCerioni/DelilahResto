@@ -12,8 +12,11 @@ servers:
   description: Delilah
 tags:
 - name: Users
+  description: Users related routes
 - name: Products
-- name: Pedidos
+  description: Product CRUD
+- name: Orders
+  description: Orders CRUD
 paths:
   /user/register:
     post:
@@ -130,7 +133,7 @@ paths:
           type: string
       responses:
         "200":
-          description: Array with all users
+          description: User object
           content:
             application/json:
               schema:
@@ -158,7 +161,7 @@ paths:
           type: string
       responses:
         "200":
-          description: OK
+          description: Array with all products
           content:
             application/json:
               schema:
@@ -185,9 +188,17 @@ paths:
         explode: false
         schema:
           type: string
+      requestBody:
+        description: The id in the request body refers to the id of the product you
+          want to edit. The other properties are the ones you change.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditProduct'
+        required: true
       responses:
         "200":
-          description: OK
+          description: Product edited
           content:
             application/json:
               schema:
@@ -222,7 +233,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductPost'
+              $ref: '#/components/schemas/CreateProduct'
         required: true
       responses:
         "200":
@@ -268,7 +279,7 @@ paths:
           type: string
       responses:
         "204":
-          description: OK
+          description: Product deleted
           content:
             application/json:
               schema:
@@ -414,7 +425,7 @@ paths:
           type: integer
       responses:
         "200":
-          description: Invalid id
+          description: Order deleted
           content:
             application/json:
               schema:
@@ -527,6 +538,41 @@ components:
         inStock:
           type: boolean
           example: false
+    CreateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: number
+          example: 300
+        description:
+          type: string
+          example: Hamburguesa con papas fritas light
+        inStock:
+          type: boolean
+          example: true
+    EditProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Hamburguesa con queso
+        price:
+          type: integer
+          format: int64
+          example: 150
+        description:
+          type: string
+          example: Hamburguesa con queso
+        inStock:
+          type: boolean
+          example: true
     EditedProduct:
       type: object
       properties:
@@ -549,21 +595,6 @@ components:
           example: Product deleted
         deletedOrder:
           $ref: '#/components/schemas/DeletedProduct_deletedOrder'
-    ProductPost:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Hamburguesa con queso
-        price:
-          type: number
-          example: 300
-        description:
-          type: string
-          example: Hamburguesa con papas fritas light
-        inStock:
-          type: boolean
-          example: true
     Order:
       type: object
       properties:
@@ -723,7 +754,7 @@ components:
           type: string
           example: Product created
         product:
-          $ref: '#/components/schemas/ProductPost'
+          $ref: '#/components/schemas/CreateProduct'
     inline_response_422_1:
       type: object
       properties:
@@ -737,11 +768,13 @@ components:
       type: object
       properties:
         value:
-          type: string
+          type: integer
         msg:
           type: string
+          example: must be a valid address
         param:
           type: string
+          example: address
         location:
           type: string
           example: body

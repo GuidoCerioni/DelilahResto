@@ -7,19 +7,25 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ msg: "Invalid token" });
+          return res.status(401).json({
+            success: false,
+            message: "Invalid token"
+          });
         } else {
           if (decoded.isAdmin == 1) {
             next();
           } else {
             return res
               .status(200)
-              .json({ msg: "You dont have permission for this request" });
+              .json({
+                success: false,
+                message: "You dont have permission for this request",
+              });
           }
         }
       });
     } else {
-      return res.status(401).json({ msg: "No token" });
+      return res.status(401).json({ success: false, message: "No token" });
     }
   },
 
@@ -28,13 +34,13 @@ module.exports = {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ msg: "Invalid token" });
+          return res
+            .status(401)
+            .json({ success: false, message: "Invalid token" });
         } else next();
       });
     } else {
-      res.send({
-        msg: "No token",
-      });
+      res.status(401).json({ success: false, message: "No token" });
     }
   },
   generateToken: function (req, res, response) {
@@ -48,7 +54,7 @@ module.exports = {
 
     const token = jwt.sign(payload, secret, options);
 
-    res.status(200).send({
+    res.status(200).json({
       success: true,
       userName: response[0].userName,
       accesstoken: token,

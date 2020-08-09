@@ -4,12 +4,20 @@ const PASSWORD = "";
 const PORT = 3306;
 const DATABASE_NAME = "delilahresto";
 
+
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(`mysql://${USERNAME}:${PASSWORD}@127.0.0.1:${PORT}/${DATABASE_NAME}`);
+const sequelize = new Sequelize(
+  `mysql://${USERNAME}:${PASSWORD}@127.0.0.1:${PORT}/${DATABASE_NAME}`
+);
+sequelize.options.logging = false; //turn logging SQL queries off
+
 sequelize
   .authenticate()
-  .then(() => console.log("Database connection has been established successfully."))
-  .catch((error) =>console.error("Unable to connect to the database: ", error));
+  .then(() =>
+    console.log("Database connection has been established successfully.")
+  )
+  .catch((error) =>
+    console.error("Unable to connect to the database: ", error)
+  );
 
-  
 module.exports = sequelize;
