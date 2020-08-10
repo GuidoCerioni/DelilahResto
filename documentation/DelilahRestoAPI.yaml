@@ -300,7 +300,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/inline_response_422'
-  /orders:
+  /order:
     get:
       tags:
       - Orders
@@ -412,7 +412,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorInvalidInput'
-  /orders/{id}:
+  /order/{id}:
     delete:
       tags:
       - Orders

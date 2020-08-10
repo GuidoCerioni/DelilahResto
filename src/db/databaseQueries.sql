@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Volcado de datos para la tabla `orders`
 --
 
-INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(14, 103, 1, 'new', '2020-07-17 03:09:47', '20xHamburguesa con queso', 'sarasa 123', 3000);
-INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(15, 103, 1, 'new', '2020-07-17 03:10:16', '20xHamburguesa con queso, 20xHamburguesa con jyq', 'sarasa 123', 5200);
-INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(16, 103, 1, 'new', '2020-07-17 03:10:26', '2xHamburguesa con queso, 2xHamburguesa con jyq', 'sarasa 123', 520);
+INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(14, 98, 1, 'new', '2020-07-17 03:09:47', '20xHamburguesa con queso', 'sarasa 123', 3000);
+INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(15, 98, 1, 'new', '2020-07-17 03:10:16', '20xHamburguesa con queso, 20xHamburguesa con jyq', 'sarasa 123', 5200);
+INSERT INTO `orders` (`id`, `id_user`, `id_paymentType`, `state`, `date`, `description`, `address`, `totalPrice`) VALUES(16, 98, 1, 'new', '2020-07-17 03:10:26', '2xHamburguesa con queso, 2xHamburguesa con jyq', 'sarasa 123', 520);
 
 -- --------------------------------------------------------
 
@@ -153,8 +153,8 @@ INSERT INTO `users` (`id`, `userName`, `password`, `fullName`, `email`, `phoneNu
 -- Filtros para la tabla `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`id_paymentType`) REFERENCES `orders_payment_type` (`id`);
+  ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
+  ADD FOREIGN KEY (`id_paymentType`) REFERENCES `orders_payment_type` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

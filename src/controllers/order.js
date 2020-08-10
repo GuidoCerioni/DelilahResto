@@ -120,13 +120,25 @@ router.post(
     //calculate order totalprice AND generate order description based on the products
     var totalPrice = 0;
     var description = [];
-    req.body.products.forEach((product) => {
+    var flagg = 0;
+    req.body.products.forEach((product, i) => {
       const currentProduct = JSON.parse(app.locals.products).find(
         (prod) => prod.id === product.id
       );
+      if (currentProduct == null) {
+        flagg = 1;
+        return res.status(422).json({
+          success: false,
+          error: `Incorrect ID of products[${i}]`,
+        });
+      }
+
       totalPrice = totalPrice + currentProduct.price * product.quantity;
       description.push(`${product.quantity}x${currentProduct.name}`);
     });
+    if (flagg) {
+      return;
+    }
     description = description.join(", ");
 
     var replacements = {
@@ -286,7 +298,6 @@ dataBase
   })
   .then((response) => {
     app.locals.products = JSON.stringify(response);
-    console.log("products: " + app.locals.products);
   })
   .catch(() => {
     console.log("error");
