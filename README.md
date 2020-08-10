@@ -33,14 +33,14 @@ npm start
 ```
 
 # Endpoints documentation
-Check the available endpoints [here](https://app.swaggerhub.com/apis-docs/GuidoCerioni/Resto/1.0.0) (this is a swagger documentation, the [YAML file](./documentation/endpointsDOC.yaml) is in the repo just in case).
+Check the available endpoints [__here__](https://app.swaggerhub.com/apis-docs/GuidoCerioni/Resto/1.0.0) (this is a swagger documentation, the [YAML file](./documentation/endpointsDOC.yaml) is in the repo just in case).
 
 # Test
 To test the endpoints you should have both MySQL and the server started. The API base url is `localhost:3000/`.
 
-Anyways, I recomend you use Postman. By clicking here [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.postman.co/run-collection/23a3a827e5984806c6a0) you will be able to import the colection with all the API endpoints with preloaded data for testing.
+Anyways, I recomend you use __Postman__. By clicking here [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.postman.co/run-collection/23a3a827e5984806c6a0) you will be able to import the colection with all the API endpoints with preloaded data for testing.
 
-Remember you need a token in order to use the API. You can get it from the user login endpoint. There is one admin user preloaded (username: admin password: admin123).
+Remember you need a __token__ in order to use the API. You can get it from the user login endpoint. There is one admin user preloaded (username: admin password: admin123).
 
 
 
