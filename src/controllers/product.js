@@ -141,7 +141,7 @@ router.delete("/:id", adminRoute, (req, res) => {
             },
           })
           .then((response) => {
-            res.status(204).json({
+            res.status(200).json({
               success: true,
               message: "Product deleted",
               deletedProduct,

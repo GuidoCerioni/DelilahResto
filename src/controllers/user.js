@@ -32,8 +32,8 @@ router.post("/login", (req, res) => {
         },
         type: dataBase.QueryTypes.SELECT,
       }
-  )
-    
+    )
+
     .then((response) => {
       if (response.length == 0) {
         res.status(401).json({
@@ -66,8 +66,15 @@ router.get("/:id", adminRoute, (req, res) => {
       replacements: { userid: req.params.id },
       type: dataBase.QueryTypes.SELECT,
     })
-    .then((response) => res.status(200).json(response))
-    .catch((err) => catchSqlError(res, err));
+    .then((response) => {
+      if (response.length == 0) {
+        return res.status(401).json({
+          success: false,
+          error: "No user with this id",
+        });
+      }
+      res.status(200).json(response);
+    });
 });
 
 //POST new user

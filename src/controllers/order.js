@@ -1,5 +1,6 @@
 //  ORDERS ROUTES
 const express = require("express");
+const app = express();
 const router = express.Router();
 
 const dataBase = require("../db/config.js");
@@ -98,7 +99,7 @@ router.post(
       }
     }
   },
-  async function (req, res) {
+  function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       //controlling posible errors
@@ -116,24 +117,11 @@ router.post(
       }
     });
 
-    //get all products in array productsFromDatabase
-    var productsFromDatabase = [];
-    await dataBase
-      .query(`SELECT * FROM products`, {
-        type: dataBase.QueryTypes.SELECT,
-      })
-      .then((response) => {
-        productsFromDatabase = response;
-      })
-      .catch((err) => {
-        catchSqlError(res, err);
-      });
-
     //calculate order totalprice AND generate order description based on the products
     var totalPrice = 0;
     var description = [];
     req.body.products.forEach((product) => {
-      const currentProduct = productsFromDatabase.find(
+      const currentProduct = JSON.parse(app.locals.products).find(
         (prod) => prod.id === product.id
       );
       totalPrice = totalPrice + currentProduct.price * product.quantity;
@@ -206,7 +194,7 @@ router.put("/edit", adminRoute, (req, res) => {
       },
       type: dataBase.QueryTypes.SELECT,
     })
-    
+
     .then((response) => {
       /* if there isnt a Response, return error. */
       if (response.length == 0) {
@@ -289,5 +277,19 @@ router.delete("/delete/:id", adminRoute, (req, res) => {
       catchSqlError(res, err);
     });
 });
+
+//get all products in array app.locals.products
+
+dataBase
+  .query(`SELECT * FROM products`, {
+    type: dataBase.QueryTypes.SELECT,
+  })
+  .then((response) => {
+    app.locals.products = JSON.stringify(response);
+    console.log("products: " + app.locals.products);
+  })
+  .catch(() => {
+    console.log("error");
+  });
 
 module.exports = router;

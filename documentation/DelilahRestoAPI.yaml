@@ -8,8 +8,6 @@ info:
 servers:
 - url: https://virtserver.swaggerhub.com/GuidoCerioni/Resto/1.0.0
   description: SwaggerHub API Auto Mocking
-- url: http://delilahresto.com/v1
-  description: Delilah
 tags:
 - name: Users
   description: Users related routes
@@ -39,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/inline_response_201'
         "409":
-          description: Invalid id
+          description: Invalid email
           content:
             application/json:
               schema:
@@ -54,7 +52,7 @@ paths:
     post:
       tags:
       - Users
-      summary: Log in an existing user
+      summary: Log in an existing user (GET token)
       description: Login user and get the token
       operationId: loginUser
       requestBody:
@@ -107,7 +105,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
   /user/{id}:
     get:
       tags:
@@ -143,7 +141,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
+        "422":
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
   /product:
     get:
       tags:
@@ -173,7 +177,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
     put:
       tags:
       - Products
@@ -189,8 +193,8 @@ paths:
         schema:
           type: string
       requestBody:
-        description: The id in the request body refers to the id of the product you
-          want to edit. The other properties are the ones you change.
+        description: The __ID__ in the request body refers to the id of the product
+          you want to edit. The other properties are the ones you change.
         content:
           application/json:
             schema:
@@ -208,7 +212,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
         "422":
           description: Invalid id
           content:
@@ -247,9 +251,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
         "422":
-          description: Invalid id
+          description: Name is used
           content:
             application/json:
               schema:
@@ -289,7 +293,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
         "422":
           description: Invalid id
           content:
@@ -325,7 +329,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
     put:
       tags:
       - Orders
@@ -341,8 +345,8 @@ paths:
         schema:
           type: string
       requestBody:
-        description: The id in the request body refers to the id of the order you
-          want to edit. The other properties are the ones you change.
+        description: The __ID__ in the request body refers to the id of the order
+          you want to edit. The other properties are the ones you change.
         content:
           application/json:
             schema:
@@ -360,7 +364,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
         "422":
           description: Invalid id
           content:
@@ -401,7 +405,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401_1'
+                $ref: '#/components/schemas/errorToken'
         "422":
           description: Invalid input
           content:
@@ -448,6 +452,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/errorInvalidInput_errors'
+    errorToken:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Invalid token or no token
     Userbodypost:
       type: object
       properties:
@@ -704,10 +717,10 @@ components:
       properties:
         userName:
           type: string
-          example: JorgePitusa
+          example: admin
         password:
           type: string
-          example: jorgito1234
+          example: admin123
     inline_response_200:
       type: object
       properties:
@@ -729,12 +742,6 @@ components:
         error:
           type: string
           example: incorrect user-password
-    inline_response_401_1:
-      type: object
-      properties:
-        msg:
-          type: string
-          description: Invalid token or no token
     inline_response_422:
       type: object
       properties:
