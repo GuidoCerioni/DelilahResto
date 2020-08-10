@@ -38,7 +38,7 @@ Check the available endpoints [here](https://app.swaggerhub.com/apis-docs/GuidoC
 # Test
 To test the endpoints you should have both MySQL and the server started. The API base url is `localhost:3000/`.
 
-Anyways, I recomend you use Postman. By clicking here [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/23a3a827e5984806c6a0) you will be able to import the colection with all the API endpoints with preloaded data for testing.
+Anyways, I recomend you use Postman. By clicking here [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.postman.co/run-collection/23a3a827e5984806c6a0) you will be able to import the colection with all the API endpoints with preloaded data for testing.
 
 Remember you need a token in order to use the API. You can get it from the user login endpoint. There is one admin user preloaded (username: admin password: admin123).
 
