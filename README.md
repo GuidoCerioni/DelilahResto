@@ -4,7 +4,7 @@ API Rest built in NodeJS, using express and MySQL. This API is made to manage or
 #### Features
 - CRUD Products methods.
 - CRUD Orders methods.
-- User log in using Json Web Token
+- User log in using [**JWT**](https://jwt.io/).
 - Role validation
 
 # MySQL set up
