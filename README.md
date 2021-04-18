@@ -27,7 +27,7 @@ cd C:/.../.../DelilahResto
 npm install
 ```
 
-3. Start the server, also from your commnand line tool.
+3. Start the server, also from your command line tool.
 ```bash
 npm start
 ```
