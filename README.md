@@ -1,5 +1,5 @@
 # Delilah Restó 
-API Rest built in NodeJS, using [Express](https://expressjs.com/) and [MySQL](https://www.mysql.com/). This API is made to manage orders in a restaurant.
+API Rest built in [**NodeJS**](https://nodejs.org/en/), using [Express](https://expressjs.com/) and [MySQL](https://www.mysql.com/). This API is made to manage orders in a restaurant.
 
 #### Features
 - CRUD Products methods.
