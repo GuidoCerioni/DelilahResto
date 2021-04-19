@@ -19,6 +19,9 @@ API Rest built in [**NodeJS**](https://nodejs.org/en/), using [Express](https://
 node -v
 ```
 This should print the version number.
+```bash
+v15.14.0
+```
 
 2. Clone this repository into your computer. Get to the folder you clone it and install the npm dependencies. You can do that from your command line tool.
 ```bash
